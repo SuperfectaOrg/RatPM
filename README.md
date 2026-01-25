@@ -1,3 +1,5 @@
+# RatPM — RatOS Package Manager
+
 <div align="center">
 
 <img src="RatPM.webp" alt="RatPM Logo" width="300" />
@@ -9,24 +11,25 @@
 <br />
 
 <p>
-<img src="https://img.shields.io/github/actions/workflow/status/RatOS/ratpm/build.yml?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=build">
-<img src="https://img.shields.io/github/v/release/RatOS/ratpm?style=for-the-badge&logo=semantic-release&logoColor=white&color=6f42c1&label=version">
-<img src="https://img.shields.io/github/license/RatOS/ratpm?style=for-the-badge&logo=open-source-initiative&logoColor=white&color=6f42c1">
-<img src="https://img.shields.io/github/languages/top/RatOS/ratpm?style=for-the-badge&logo=rust&logoColor=white&color=6f42c1">
-<img src="https://img.shields.io/github/contributors/RatOS/ratpm?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
-<img src="https://img.shields.io/github/issues/RatOS/ratpm?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=issues">
-<img src="https://img.shields.io/github/issues-closed-raw/RatOS/ratpm?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=closed%20issues">
-<img src="https://img.shields.io/github/issues-pr/RatOS/ratpm?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=PRs">
-<img src="https://img.shields.io/github/issues-pr-closed/RatOS/ratpm?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=PRs%20closed">
-<img src="https://img.shields.io/github/stars/RatOS/ratpm?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
-<img src="https://img.shields.io/github/forks/RatOS/ratpm?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
-<img src="https://img.shields.io/github/downloads/RatOS/ratpm/total?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
-<img src="https://img.shields.io/github/repo-size/RatOS/ratpm?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
-<img src="https://img.shields.io/github/last-commit/RatOS/ratpm?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
+<img src="https://img.shields.io/github/actions/workflow/status/SuperfectaOfRats/RatPM/build.yml?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=build">
+<img src="https://img.shields.io/github/v/release/SuperfectaOfRats/RatPM?style=for-the-badge&logo=semantic-release&logoColor=white&color=6f42c1&label=version">
+<img src="https://img.shields.io/github/license/SuperfectaOfRats/RatPM?style=for-the-badge&logo=open-source-initiative&logoColor=white&color=6f42c1">
+<img src="https://img.shields.io/github/languages/top/SuperfectaOfRats/RatPM?style=for-the-badge&logo=rust&logoColor=white&color=6f42c1">
+<img src="https://img.shields.io/github/contributors/SuperfectaOfRats/RatPM?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
+</p>
+<p>
+<img src="https://img.shields.io/github/issues/SuperfectaOfRats/RatPM?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=issues">
+<img src="https://img.shields.io/github/issues-closed-raw/SuperfectaOfRats/RatPM?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=closed%20issues">
+<img src="https://img.shields.io/github/issues-pr/SuperfectaOfRats/RatPM?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=PRs">
+<img src="https://img.shields.io/github/issues-pr-closed/SuperfectaOfRats/RatPM?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=PRs%20closed">
+<img src="https://img.shields.io/github/stars/SuperfectaOfRats/RatPM?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
+<img src="https://img.shields.io/github/forks/SuperfectaOfRats/RatPM?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
+<img src="https://img.shields.io/github/downloads/SuperfectaOfRats/RatPM/total?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
+<img src="https://img.shields.io/github/repo-size/SuperfectaOfRats/RatPM?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
+<img src="https://img.shields.io/github/last-commit/SuperfectaOfRats/RatPM?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
 </p>
 
 </div>
-
 
 ---
 
