@@ -1,27 +1,34 @@
+# RatPM — RatOS Package Manager
+
 <div align="center">
 
 <img src="RatPM.webp" alt="RatPM Logo" width="300" />
 
 <br />
 
-<strong>Enterprise-grade package management frontend for RatOS</strong><br />
+**Enterprise-grade package management frontend for RatOS**<br />
 Policy-driven · Transaction-safe · Built on Fedora’s RPM ecosystem
 
-<br /><br />
+<br />
 
-<img alt="License"
-     src="https://img.shields.io/badge/License-GPL--3.0--or--later-7b5cff?style=flat-square&labelColor=1a1a1a" />
-<img alt="Language"
-     src="https://img.shields.io/badge/Language-Rust-7b5cff?style=flat-square&labelColor=1a1a1a" />
-<img alt="Backend"
-     src="https://img.shields.io/badge/Backend-RPM%20%2B%20libdnf5-7b5cff?style=flat-square&labelColor=1a1a1a" />
-<img alt="Platform"
-     src="https://img.shields.io/badge/Platform-Linux-7b5cff?style=flat-square&labelColor=1a1a1a" />
-<img alt="Status"
-     src="https://img.shields.io/badge/Status-Active%20Development-7b5cff?style=flat-square&labelColor=1a1a1a" />
+<p>
+<img src="https://img.shields.io/github/actions/workflow/status/RatOS/ratpm/build.yml?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=build">
+<img src="https://img.shields.io/github/v/release/RatOS/ratpm?style=for-the-badge&logo=semantic-release&logoColor=white&color=6f42c1&label=version">
+<img src="https://img.shields.io/github/license/RatOS/ratpm?style=for-the-badge&logo=open-source-initiative&logoColor=white&color=6f42c1">
+<img src="https://img.shields.io/github/languages/top/RatOS/ratpm?style=for-the-badge&logo=rust&logoColor=white&color=6f42c1">
+<img src="https://img.shields.io/github/contributors/RatOS/ratpm?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
+<img src="https://img.shields.io/github/issues/RatOS/ratpm?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=issues">
+<img src="https://img.shields.io/github/issues-closed-raw/RatOS/ratpm?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=closed%20issues">
+<img src="https://img.shields.io/github/issues-pr/RatOS/ratpm?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=PRs">
+<img src="https://img.shields.io/github/issues-pr-closed/RatOS/ratpm?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=PRs%20closed">
+<img src="https://img.shields.io/github/stars/RatOS/ratpm?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
+<img src="https://img.shields.io/github/forks/RatOS/ratpm?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
+<img src="https://img.shields.io/github/downloads/RatOS/ratpm/total?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
+<img src="https://img.shields.io/github/repo-size/RatOS/ratpm?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
+<img src="https://img.shields.io/github/last-commit/RatOS/ratpm?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
+</p>
 
 </div>
-
 
 ---
 
