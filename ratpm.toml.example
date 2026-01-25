@@ -1,0 +1,42 @@
+# RatPM Configuration File
+# This file controls the behavior of the RatOS Package Manager
+
+[system]
+# Backend to use for package management (currently only "fedora" is supported)
+backend = "fedora"
+
+# Automatically answer "yes" to all prompts (use with caution)
+assume_yes = false
+
+# Enable colored output
+color = true
+
+# Directory for caching package metadata and downloads
+cache_dir = "/var/cache/ratpm"
+
+# Path to the lock file used to prevent concurrent operations
+lock_file = "/var/lock/ratpm.lock"
+
+[repos]
+# Automatically refresh repository metadata if stale
+auto_refresh = true
+
+# Time in seconds before repository metadata is considered stale
+# Default: 86400 (24 hours)
+metadata_expire = 86400
+
+# Directory containing repository definitions (.repo files)
+repo_dir = "/etc/yum.repos.d"
+
+# Require GPG signature verification for packages
+gpgcheck = true
+
+[transaction]
+# Keep downloaded packages in cache after installation
+keep_cache = true
+
+# Maximum number of transaction history entries to retain
+history_limit = 100
+
+# Verify package signatures before installation
+verify_signatures = true
