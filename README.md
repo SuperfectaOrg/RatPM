@@ -1,13 +1,10 @@
-# RatPM — RatOS Package Manager
-
 <div align="center">
 
 <img src="RatPM.webp" alt="RatPM Logo" width="300" />
 
-<br />
-
-**Enterprise-grade package management frontend for RatOS**<br />
-Policy-driven · Transaction-safe · Built on Fedora’s RPM ecosystem
+<h1>RatPM</h1>
+<h3>Enterprise-grade package management frontend for RatOS</h3>
+<p>Policy-driven · Transaction-safe · Built on Fedora’s RPM ecosystem</p>
 
 <br />
 
@@ -29,6 +26,7 @@ Policy-driven · Transaction-safe · Built on Fedora’s RPM ecosystem
 </p>
 
 </div>
+
 
 ---
 
