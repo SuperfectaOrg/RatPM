@@ -2,7 +2,7 @@
 
 <div align="center">
 
-<img src="RatPM.webp" alt="RatPM Logo" width="150" />
+<img src="RatPM.webp" alt="RatPM Logo" width="350" />
 
 <h1>RatPM</h1>
 <h3>Enterprise-grade package management frontend for RatOS</h3>
