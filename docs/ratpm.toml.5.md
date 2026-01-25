@@ -63,7 +63,7 @@ install -d -m 755 %{buildroot}%{_localstatedir}/lib/ratpm
 %systemd_postun_with_restart ratpm-refresh.timer
 
 %changelog
-* Mon Jan 26 2026 RatOS Team <team@ratos.org> - 1.0.0-1
+* Mon Jan 26 2026 RatOS Team <team@superfecta.org> - 1.0.0-1
 - Initial release
 - Core package management functionality
 - Repository management
