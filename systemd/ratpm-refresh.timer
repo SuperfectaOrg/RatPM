@@ -1,0 +1,17 @@
+[Unit]
+Description=Daily RatPM Repository Metadata Refresh
+Documentation=man:ratpm(8)
+
+[Timer]
+# Run daily at 6:00 AM
+OnCalendar=daily
+OnCalendar=06:00
+
+# Run 1 hour after boot if the system was off during scheduled time
+Persistent=true
+
+# Randomize start time by up to 30 minutes to reduce server load
+RandomizedDelaySec=30min
+
+[Install]
+WantedBy=timers.target
