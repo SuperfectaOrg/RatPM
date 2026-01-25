@@ -1,7 +1,9 @@
 # RatPM — RatOS Package Manager
 
 <div align="center">
+
 <img src="RatPM.webp" alt="RatPM Logo" width="250" />
+
 <h1>RatPM</h1>
 <h3>Enterprise-grade package management frontend for RatOS</h3>
 <p>Policy-driven · Transaction-safe · Built on Fedora’s RPM ecosystem</p>
@@ -9,22 +11,12 @@
 <br />
 
 <p>
-<img src="https://img.shields.io/github/actions/workflow/status/SuperfectaOfRats/RatPM/build.yml?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=build">
-<img src="https://img.shields.io/github/v/release/SuperfectaOfRats/RatPM?style=for-the-badge&logo=semantic-release&logoColor=white&color=6f42c1&label=version">
-<img src="https://img.shields.io/github/license/SuperfectaOfRats/RatPM?style=for-the-badge&logo=open-source-initiative&logoColor=white&color=6f42c1">
-<img src="https://img.shields.io/github/languages/top/SuperfectaOfRats/RatPM?style=for-the-badge&logo=rust&logoColor=white&color=6f42c1">
-<img src="https://img.shields.io/github/contributors/SuperfectaOfRats/RatPM?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
-</p>
-<p>
-<img src="https://img.shields.io/github/issues/SuperfectaOfRats/RatPM?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=issues">
-<img src="https://img.shields.io/github/issues-closed-raw/SuperfectaOfRats/RatPM?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=closed%20issues">
-<img src="https://img.shields.io/github/issues-pr/SuperfectaOfRats/RatPM?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=PRs">
-<img src="https://img.shields.io/github/issues-pr-closed/SuperfectaOfRats/RatPM?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=PRs%20closed">
-<img src="https://img.shields.io/github/stars/SuperfectaOfRats/RatPM?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
-<img src="https://img.shields.io/github/forks/SuperfectaOfRats/RatPM?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
-<img src="https://img.shields.io/github/downloads/SuperfectaOfRats/RatPM/total?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
-<img src="https://img.shields.io/github/repo-size/SuperfectaOfRats/RatPM?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
-<img src="https://img.shields.io/github/last-commit/SuperfectaOfRats/RatPM?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
+<img src="https://img.shields.io/github/actions/workflow/status/SuperfectaOrg/RatPM/build.yml?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=build">
+<img src="https://img.shields.io/github/v/release/SuperfectaOrg/RatPM?style=for-the-badge&logo=semantic-release&logoColor=white&color=6f42c1&label=version">
+<img src="https://img.shields.io/github/license/SuperfectaOrg/RatPM?style=for-the-badge&logo=open-source-initiative&logoColor=white&color=6f42c1">
+<img src="https://img.shields.io/github/languages/top/SuperfectaOrg/RatPM?style=for-the-badge&logo=rust&logoColor=white&color=6f42c1">
+<img src="https://img.shields.io/github/issues/SuperfectaOrg/RatPM?style=for-the-badge&logo=github&logoColor=white&color=6f42c1&label=issues">
+<img src="https://img.shields.io/github/last-commit/SuperfectaOrg/RatPM?style=for-the-badge&logo=github&logoColor=white&color=6f42c1">
 </p>
 
 </div>
