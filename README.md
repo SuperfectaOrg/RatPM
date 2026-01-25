@@ -1,18 +1,27 @@
-# RatPM — RatOS Package Manager
-
 <div align="center">
-    
-<img src="RatPM.webp" alt="RatPM Logo" width="280" />
 
-**Enterprise‑grade package management frontend for RatOS**
-Policy‑driven. Transaction‑safe. Built on Fedora’s RPM ecosystem.
+<img src="RatPM.webp" alt="RatPM Logo" width="300" />
 
-![License](https://img.shields.io/badge/license-GPL--3.0--or--later-blue)
-![Language](https://img.shields.io/badge/language-Rust-orange)
-![Backend](https://img.shields.io/badge/backend-RPM%20%2B%20libdnf5-purple)
-![Platform](https://img.shields.io/badge/platform-Linux-lightgrey)
+<br />
+
+<strong>Enterprise-grade package management frontend for RatOS</strong><br />
+Policy-driven · Transaction-safe · Built on Fedora’s RPM ecosystem
+
+<br /><br />
+
+<img alt="License"
+     src="https://img.shields.io/badge/License-GPL--3.0--or--later-7b5cff?style=flat-square&labelColor=1a1a1a" />
+<img alt="Language"
+     src="https://img.shields.io/badge/Language-Rust-7b5cff?style=flat-square&labelColor=1a1a1a" />
+<img alt="Backend"
+     src="https://img.shields.io/badge/Backend-RPM%20%2B%20libdnf5-7b5cff?style=flat-square&labelColor=1a1a1a" />
+<img alt="Platform"
+     src="https://img.shields.io/badge/Platform-Linux-7b5cff?style=flat-square&labelColor=1a1a1a" />
+<img alt="Status"
+     src="https://img.shields.io/badge/Status-Active%20Development-7b5cff?style=flat-square&labelColor=1a1a1a" />
 
 </div>
+
 
 ---
 
