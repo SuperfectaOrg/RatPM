@@ -1,0 +1,15 @@
+[package]
+name = "libdnf5-sys"
+version = "0.1.0"
+edition = "2021"
+authors = ["RatOS Team"]
+license = "GPL-3.0-or-later"
+description = "FFI bindings to libdnf5"
+links = "dnf5"
+
+[dependencies]
+libc = "0.2"
+
+[build-dependencies]
+bindgen = "0.69"
+pkg-config = "0.3"
