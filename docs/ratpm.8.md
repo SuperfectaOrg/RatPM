@@ -166,7 +166,7 @@ GPG verification is enabled by default for both repository metadata and packages
 
 # BUGS
 
-Report bugs at: https://github.com/ratos/ratpm/issues
+Report bugs at: https://github.com/SuperfectaOrg/RatPM/issues
 
 # SEE ALSO
 
