@@ -4,7 +4,6 @@
     
 <img src="RatPM.webp" alt="RatPM Logo" width="280" />
 
-
 **Enterprise‑grade package management frontend for RatOS**
 Policy‑driven. Transaction‑safe. Built on Fedora’s RPM ecosystem.
 
