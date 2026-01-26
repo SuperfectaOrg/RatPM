@@ -28,7 +28,7 @@ jobs:
           git \
           make
     
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     
     - name: Cache cargo registry
       uses: actions/cache@v3
@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     
     - name: Install Rust
       uses: dtolnay/rust-toolchain@stable
@@ -86,7 +86,7 @@ jobs:
           rpm-devel \
           git
     
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     
     - name: Run clippy
       run: cargo clippy --all-targets --all-features -- -D warnings
@@ -108,7 +108,7 @@ jobs:
           git \
           make
     
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     
     - name: Build
       run: cargo build --release --verbose
@@ -124,7 +124,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     
     - name: Install Rust
       uses: dtolnay/rust-toolchain@stable
