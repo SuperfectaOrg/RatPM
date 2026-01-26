@@ -1,0 +1,35 @@
+# RatPM Code Owners
+# These owners will be requested for review when someone opens a PR
+
+# Default owners for everything in the repo
+* @SuperfectaOrg/ratpm-maintainers
+
+# Core functionality
+/src/core/ @SuperfectaOrg/ratpm-core-team
+/src/backend/ @SuperfectaOrg/ratpm-backend-team
+
+# CLI and user interface
+/src/cli/ @SuperfectaOrg/ratpm-ui-team
+
+# Configuration
+/src/config/ @SuperfectaOrg/ratpm-core-team
+
+# FFI bindings
+/libdnf5-sys/ @SuperfectaOrg/ratpm-backend-team
+
+# Documentation
+/docs/ @SuperfectaOrg/ratpm-docs-team
+*.md @SuperfectaOrg/ratpm-docs-team
+
+# CI/CD
+/.github/ @SuperfectaOrg/ratpm-devops-team
+
+# Build and packaging
+/packaging/ @SuperfectaOrg/ratpm-devops-team
+/scripts/ @SuperfectaOrg/ratpm-devops-team
+Cargo.toml @SuperfectaOrg/ratpm-core-team
+Makefile @SuperfectaOrg/ratpm-devops-team
+
+# Security
+SECURITY.md @SuperfectaOrg/ratpm-security-team
+/src/core/lock.rs @SuperfectaOrg/ratpm-security-team
