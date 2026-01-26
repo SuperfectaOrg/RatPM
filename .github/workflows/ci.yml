@@ -114,7 +114,7 @@ jobs:
       run: cargo build --release --verbose
     
     - name: Upload binary
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v6
       with:
         name: ratpm-binary
         path: target/release/ratpm
