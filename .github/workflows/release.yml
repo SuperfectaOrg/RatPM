@@ -1,0 +1,98 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    
+    steps:
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+  build-release:
+    name: Build Release
+    needs: create-release
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:latest
+    
+    steps:
+    - name: Install dependencies
+      run: |
+        dnf install -y \
+          rust \
+          cargo \
+          gcc \
+          rpm-devel \
+          rpm-build \
+          git \
+          make \
+          tar \
+          gzip
+    
+    - uses: actions/checkout@v4
+    
+    - name: Build release binary
+      run: cargo build --release --verbose
+    
+    - name: Strip binary
+      run: strip target/release/ratpm
+    
+    - name: Create tarball
+      run: |
+        VERSION=${GITHUB_REF#refs/tags/v}
+        mkdir -p ratpm-${VERSION}
+        cp target/release/ratpm ratpm-${VERSION}/
+        cp README.md LICENSE ratpm.toml.example ratpm-${VERSION}/
+        cp -r docs systemd ratpm-${VERSION}/
+        tar czf ratpm-${VERSION}-x86_64.tar.gz ratpm-${VERSION}
+    
+    - name: Upload release tarball
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ./ratpm-*-x86_64.tar.gz
+        asset_name: ratpm-${{ github.ref_name }}-x86_64.tar.gz
+        asset_content_type: application/gzip
+    
+    - name: Build RPM
+      run: |
+        VERSION=${GITHUB_REF#refs/tags/v}
+        mkdir -p ~/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+        cp packaging/ratpm.spec ~/rpmbuild/SPECS/
+        tar czf ~/rpmbuild/SOURCES/ratpm-${VERSION}.tar.gz \
+          --transform "s,^,ratpm-${VERSION}/," \
+          --exclude='.git*' \
+          --exclude='target' \
+          .
+        rpmbuild -ba ~/rpmbuild/SPECS/ratpm.spec
+    
+    - name: Upload RPM
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ needs.create-release.outputs.upload_url }}
+        asset_path: ~/rpmbuild/RPMS/x86_64/ratpm-*.rpm
+        asset_name: ratpm-${{ github.ref_name }}.x86_64.rpm
+        asset_content_type: application/x-rpm
