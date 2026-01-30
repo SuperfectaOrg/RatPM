@@ -55,8 +55,13 @@ enum Commands {
 
 impl Cli {
     pub fn execute(self, context: &mut Context) -> Result<()> {
-        context.set_assume_yes(self.assume_yes);
-        context.set_color(!self.no_color);
+        if self.assume_yes {
+            context.set_assume_yes(true);
+        }
+        
+        if self.no_color {
+            context.set_color(false);
+        }
 
         match self.command {
             Commands::Install { packages } => {
