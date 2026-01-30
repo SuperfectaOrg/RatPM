@@ -30,18 +30,20 @@ impl Transaction {
     
     pub fn add_install(&mut self, package: PackageSpec, size: u64) {
         self.download_size += size;
-        self.install_size += size as i64;
+        self.install_size = self.install_size.saturating_add(size.min(i64::MAX as u64) as i64);
         self.install.push(package);
     }
     
     pub fn add_remove(&mut self, package: PackageSpec, size: u64) {
-        self.install_size -= size as i64;
+        self.install_size = self.install_size.saturating_sub(size.min(i64::MAX as u64) as i64);
         self.remove.push(package);
     }
     
     pub fn add_upgrade(&mut self, old: PackageSpec, new: PackageSpec, old_size: u64, new_size: u64) {
         self.download_size += new_size;
-        self.install_size += new_size as i64 - old_size as i64;
+        let new_i64 = new_size.min(i64::MAX as u64) as i64;
+        let old_i64 = old_size.min(i64::MAX as u64) as i64;
+        self.install_size = self.install_size.saturating_add(new_i64).saturating_sub(old_i64);
         self.upgrade.push((old, new));
     }
 }
