@@ -78,11 +78,16 @@ fn download_packages(
         let repo = repos.get_repository(&spec.repo)
             .ok_or_else(|| RatpmError::RepoUnavailable(spec.repo.clone()))?;
         
+        let first_char = spec.name.chars().next()
+            .map(|c| c.to_lowercase().to_string())
+            .unwrap_or_else(|| String::from("_"));
+        
         let package_url = format!(
-            "{}/Packages/{}/{}-{}.{}.rpm",
-            repo.baseurl,
-            spec.name.chars().next().unwrap_or('x'),
+            "{}/Packages/{}/{}-{}-{}.{}.rpm",
+            repo.baseurl.trim_end_matches('/'),
+            first_char,
             spec.name,
+            spec.version,
             spec.version,
             spec.arch
         );
