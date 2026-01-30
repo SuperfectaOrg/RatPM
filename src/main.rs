@@ -25,7 +25,16 @@ fn main() -> Result<()> {
     
     let mut context = Context::new(config)?;
     
-    cli.execute(&mut context)?;
+    if let Err(e) = cli.execute(&mut context) {
+        let exit_code = if let Some(ratpm_err) = e.downcast_ref::<core::errors::RatpmError>() {
+            ratpm_err.exit_code()
+        } else {
+            1
+        };
+        
+        eprintln!("Error: {}", e);
+        std::process::exit(exit_code);
+    }
 
     Ok(())
 }
