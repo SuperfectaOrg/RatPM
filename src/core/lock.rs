@@ -57,11 +57,27 @@ impl LockManager for FileLockManager {
         self.ensure_lock_file_exists()?;
         
         let start = Instant::now();
+        let mut first_attempt = true;
         
         loop {
+            if !first_attempt && self.lock_path.exists() {
+                if let Some(holder_pid) = self.read_lock_holder() {
+                    if !Self::is_process_alive(holder_pid) {
+                        tracing::warn!(
+                            "Lock held by dead process (PID {}), cleaning up",
+                            holder_pid
+                        );
+                        let _ = std::fs::remove_file(&self.lock_path);
+                        self.ensure_lock_file_exists()?;
+                    }
+                }
+            }
+            first_attempt = false;
+            
             let file = OpenOptions::new()
                 .read(true)
                 .write(true)
+                .create(true)
                 .open(&self.lock_path)
                 .context("Failed to open lock file")?;
             
@@ -87,16 +103,6 @@ impl LockManager for FileLockManager {
                         let holder = self.read_lock_holder();
                         
                         if let Some(holder_pid) = holder {
-                            if !Self::is_process_alive(holder_pid) {
-                                tracing::warn!(
-                                    "Lock held by dead process (PID {}), cleaning up",
-                                    holder_pid
-                                );
-                                std::fs::remove_file(&self.lock_path)
-                                    .context("Failed to remove stale lock file")?;
-                                continue;
-                            }
-                            
                             return Err(RatpmError::LockHeld(holder_pid.to_string()).into());
                         } else {
                             return Err(RatpmError::LockTimeout.into());
