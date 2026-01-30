@@ -1,100 +1,83 @@
-use anyhow::Result;
-use clap::{Parser, Subcommand};
+use std::sync::Arc;
+use std::thread;
+use std::time::Duration;
+use tempfile::NamedTempFile;
+use ratpm::core::lock::{FileLockManager, LockManager};
 
-mod commands;
-pub mod output;
-
-use crate::core::context::Context;
-
-#[derive(Parser)]
-#[command(name = "ratpm")]
-#[command(about = "RatOS Package Manager", long_about = None)]
-#[command(version)]
-pub struct Cli {
-    #[command(subcommand)]
-    command: Commands,
-
-    #[arg(short, long, global = true)]
-    assume_yes: bool,
-
-    #[arg(long, global = true)]
-    no_color: bool,
+#[test]
+fn test_lock_acquire_and_release() {
+    let temp_file = NamedTempFile::new().unwrap();
+    let lock_manager = FileLockManager::new(temp_file.path().to_path_buf());
+    
+    let guard = lock_manager.acquire();
+    assert!(guard.is_ok());
+    
+    drop(guard);
 }
 
-#[derive(Subcommand)]
-enum Commands {
-    Install {
-        packages: Vec<String>,
-    },
-    Remove {
-        packages: Vec<String>,
-    },
-    Update,
-    Upgrade {
-        packages: Option<Vec<String>>,
-    },
-    Search {
-        query: String,
-    },
-    Info {
-        package: String,
-    },
-    List {
-        #[arg(long)]
-        installed: bool,
-        #[arg(long)]
-        available: bool,
-    },
-    Sync,
-    Doctor,
-    History {
-        #[arg(short, long)]
-        limit: Option<usize>,
-    },
+#[test]
+fn test_lock_prevents_concurrent_access() {
+    let temp_file = NamedTempFile::new().unwrap();
+    let lock_path = temp_file.path().to_path_buf();
+    let lock_manager = Arc::new(FileLockManager::new(lock_path.clone()));
+    
+    let _guard1 = lock_manager.acquire().unwrap();
+    
+    let lock_manager2 = Arc::clone(&lock_manager);
+    let handle = thread::spawn(move || {
+        lock_manager2.acquire()
+    });
+    
+    thread::sleep(Duration::from_millis(500));
+    
+    assert!(!handle.is_finished(), "Thread should still be waiting for lock");
 }
 
-impl Cli {
-    pub fn execute(self, context: &mut Context) -> Result<()> {
-        if self.assume_yes {
-            context.set_assume_yes(true);
-        }
-        
-        if self.no_color {
-            context.set_color(false);
-        }
+#[test]
+fn test_lock_released_on_drop() {
+    let temp_file = NamedTempFile::new().unwrap();
+    let lock_path = temp_file.path().to_path_buf();
+    let lock_manager = FileLockManager::new(lock_path);
+    
+    {
+        let _guard = lock_manager.acquire().unwrap();
+    }
+    
+    let guard2 = lock_manager.acquire();
+    assert!(guard2.is_ok());
+}
 
-        match self.command {
-            Commands::Install { packages } => {
-                commands::install::execute(context, packages)
-            }
-            Commands::Remove { packages } => {
-                commands::remove::execute(context, packages)
-            }
-            Commands::Update => {
-                commands::update::execute(context)
-            }
-            Commands::Upgrade { packages } => {
-                commands::upgrade::execute(context, packages)
-            }
-            Commands::Search { query } => {
-                commands::search::execute(context, &query)
-            }
-            Commands::Info { package } => {
-                commands::info::execute(context, &package)
-            }
-            Commands::List { installed, available } => {
-                commands::list::execute(context, installed, available)
-            }
-            Commands::Sync => {
-                commands::sync::execute(context)
-            }
-            Commands::Doctor => {
-                commands::doctor::execute(context)
-            }
-            Commands::History { limit } => {
-                commands::history::execute(context, limit)
-            }
-        }
+#[test]
+fn test_multiple_sequential_locks() {
+    let temp_file = NamedTempFile::new().unwrap();
+    let lock_manager = FileLockManager::new(temp_file.path().to_path_buf());
+    
+    for _ in 0..5 {
+        let guard = lock_manager.acquire();
+        assert!(guard.is_ok());
+        drop(guard);
     }
 }
 
+#[test]
+fn test_lock_across_threads() {
+    let temp_file = NamedTempFile::new().unwrap();
+    let lock_path = temp_file.path().to_path_buf();
+    let lock_manager = Arc::new(FileLockManager::new(lock_path));
+    
+    let mut handles = vec![];
+    
+    for i in 0..3 {
+        let lm = Arc::clone(&lock_manager);
+        let handle = thread::spawn(move || {
+            thread::sleep(Duration::from_millis(i * 50));
+            let _guard = lm.acquire().unwrap();
+            thread::sleep(Duration::from_millis(10));
+        });
+        handles.push(handle);
+    }
+    
+    for handle in handles {
+        handle.join().unwrap();
+    }
+}
