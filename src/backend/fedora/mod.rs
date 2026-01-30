@@ -46,12 +46,6 @@ impl FedoraBackend {
     }
     
     pub fn resolve_install(&self, packages: &[String]) -> Result<Transaction> {
-        for pkg_name in packages {
-            if self.rpm_db.is_installed(pkg_name)? {
-                return Err(RatpmError::PackageAlreadyInstalled(pkg_name.clone()).into());
-            }
-        }
-        
         libdnf::resolve_install(&self.repos, &self.rpm_db, packages)
     }
     
@@ -102,8 +96,14 @@ impl FedoraBackend {
     pub fn list_all(&self) -> Result<Vec<Package>> {
         let mut packages = self.list_installed()?;
         packages.extend(self.list_available()?);
-        packages.sort_by(|a, b| a.name.cmp(&b.name));
-        packages.dedup_by(|a, b| a.name == b.name);
+        packages.sort_by(|a, b| {
+            a.name.cmp(&b.name)
+                .then_with(|| a.version.cmp(&b.version))
+                .then_with(|| a.arch.cmp(&b.arch))
+        });
+        packages.dedup_by(|a, b| {
+            a.name == b.name && a.version == b.version && a.arch == b.arch
+        });
         Ok(packages)
     }
     
