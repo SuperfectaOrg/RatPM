@@ -7,18 +7,15 @@ use crate::core::errors::RatpmError;
 
 pub fn resolve_install(
     repos: &RepositoryManager,
-    rpm_db: &RpmDatabase,
+    _rpm_db: &RpmDatabase,
     packages: &[String],
 ) -> Result<Transaction> {
     tracing::info!("Resolving installation for {} packages", packages.len());
     
     let mut transaction = Transaction::new();
+    let mut added_packages = std::collections::HashSet::new();
     
     for pkg_name in packages {
-        if rpm_db.is_installed(pkg_name)? {
-            return Err(RatpmError::PackageAlreadyInstalled(pkg_name.clone()).into());
-        }
-        
         let pkg_info = repos.get_package_info(pkg_name)
             .context(format!("Package '{}' not found in any repository", pkg_name))?;
         
@@ -29,11 +26,13 @@ pub fn resolve_install(
             pkg_info.repo.clone(),
         );
         
-        transaction.add_install(spec.clone(), pkg_info.size);
+        if added_packages.insert(spec.clone()) {
+            transaction.add_install(spec.clone(), pkg_info.size);
+        }
         
-        let dependencies = resolve_dependencies(&spec, repos, rpm_db)?;
+        let dependencies = resolve_dependencies(&spec, repos, _rpm_db)?;
         for dep in dependencies {
-            if !rpm_db.is_installed(&dep.name)? {
+            if !_rpm_db.is_installed(&dep.name)? && added_packages.insert(dep.clone()) {
                 let dep_info = repos.get_package_info(&dep.name)?;
                 transaction.add_install(dep, dep_info.size);
             }
@@ -52,10 +51,6 @@ pub fn resolve_remove(
     let mut transaction = Transaction::new();
     
     for pkg_name in packages {
-        if !rpm_db.is_installed(pkg_name)? {
-            return Err(RatpmError::PackageNotInstalled(pkg_name.clone()).into());
-        }
-        
         let pkg_info = rpm_db.get_package_info(pkg_name)?;
         
         let spec = PackageSpec::new(
@@ -109,7 +104,11 @@ pub fn resolve_upgrade(
                     available_pkg.repo.clone(),
                 );
                 
-                transaction.add_upgrade(old_spec, new_spec, 0, available_pkg.size);
+                let old_size = rpm_db.get_package_info(&installed_pkg.name)
+                    .map(|info| info.size)
+                    .unwrap_or(0);
+                
+                transaction.add_upgrade(old_spec, new_spec, old_size, available_pkg.size);
             }
         }
     }
@@ -149,7 +148,7 @@ pub fn resolve_upgrade_packages(
                 available_pkg.repo.clone(),
             );
             
-            transaction.add_upgrade(old_spec, new_spec, 0, available_pkg.size);
+            transaction.add_upgrade(old_spec, new_spec, installed_pkg.size, available_pkg.size);
         }
     }
     
