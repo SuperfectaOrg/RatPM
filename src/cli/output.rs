@@ -98,6 +98,13 @@ pub fn print_transaction_summary(transaction: &Transaction, color: bool) {
     writeln!(stdout, "  Remove:   {} packages", transaction.remove.len()).unwrap();
     writeln!(stdout, "  Upgrade:  {} packages", transaction.upgrade.len()).unwrap();
     writeln!(stdout, "  Download: {}", format_size(transaction.download_size)).unwrap();
+    
+    if transaction.install_size >= 0 {
+        writeln!(stdout, "  Disk space required: {}", format_size(transaction.install_size as u64)).unwrap();
+    } else {
+        writeln!(stdout, "  Disk space freed: {}", format_size((-transaction.install_size) as u64)).unwrap();
+    }
+    
     writeln!(stdout).unwrap();
     
     stdout.flush().unwrap();
