@@ -162,8 +162,14 @@ impl RepositoryManager {
             }
         }
         
-        results.sort_by(|a, b| a.name.cmp(&b.name));
-        results.dedup_by(|a, b| a.name == b.name && a.version == b.version);
+        results.sort_by(|a, b| {
+            a.name.cmp(&b.name)
+                .then_with(|| a.version.cmp(&b.version))
+                .then_with(|| a.arch.cmp(&b.arch))
+        });
+        results.dedup_by(|a, b| {
+            a.name == b.name && a.version == b.version && a.arch == b.arch
+        });
         
         Ok(results)
     }
@@ -243,8 +249,14 @@ impl RepositoryManager {
             }
         }
         
-        packages.sort_by(|a, b| a.name.cmp(&b.name));
-        packages.dedup_by(|a, b| a.name == b.name && a.version == b.version);
+        packages.sort_by(|a, b| {
+            a.name.cmp(&b.name)
+                .then_with(|| a.version.cmp(&b.version))
+                .then_with(|| a.arch.cmp(&b.arch))
+        });
+        packages.dedup_by(|a, b| {
+            a.name == b.name && a.version == b.version && a.arch == b.arch
+        });
         
         Ok(packages)
     }
