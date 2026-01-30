@@ -175,12 +175,52 @@ fn load_config_file(path: &Path) -> Option<Config> {
 }
 
 fn merge_configs(base: &mut Config, overlay: Config) {
+    if overlay.system.backend != default_backend() {
+        base.system.backend = overlay.system.backend;
+    }
+    
     if overlay.system.assume_yes {
         base.system.assume_yes = true;
     }
     
     if !overlay.system.color {
         base.system.color = false;
+    }
+    
+    if overlay.system.cache_dir != default_cache_dir() {
+        base.system.cache_dir = overlay.system.cache_dir;
+    }
+    
+    if overlay.system.lock_file != default_lock_file() {
+        base.system.lock_file = overlay.system.lock_file;
+    }
+    
+    if !overlay.repos.auto_refresh {
+        base.repos.auto_refresh = false;
+    }
+    
+    if overlay.repos.metadata_expire != default_metadata_expire() {
+        base.repos.metadata_expire = overlay.repos.metadata_expire;
+    }
+    
+    if overlay.repos.repo_dir != default_repo_dir() {
+        base.repos.repo_dir = overlay.repos.repo_dir;
+    }
+    
+    if !overlay.repos.gpgcheck {
+        base.repos.gpgcheck = false;
+    }
+    
+    if !overlay.transaction.keep_cache {
+        base.transaction.keep_cache = false;
+    }
+    
+    if overlay.transaction.history_limit != default_history_limit() {
+        base.transaction.history_limit = overlay.transaction.history_limit;
+    }
+    
+    if !overlay.transaction.verify_signatures {
+        base.transaction.verify_signatures = false;
     }
 }
 
