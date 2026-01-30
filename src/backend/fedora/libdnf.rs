@@ -104,11 +104,7 @@ pub fn resolve_upgrade(
                     available_pkg.repo.clone(),
                 );
                 
-                let old_size = rpm_db.get_package_info(&installed_pkg.name)
-                    .map(|info| info.size)
-                    .unwrap_or(0);
-                
-                transaction.add_upgrade(old_spec, new_spec, old_size, available_pkg.size);
+                transaction.add_upgrade(old_spec, new_spec, 0, available_pkg.size);
             }
         }
     }
@@ -181,13 +177,24 @@ fn version_compare(v1: &str, v2: &str) -> i32 {
     let max_len = v1_parts.len().max(v2_parts.len());
     
     for i in 0..max_len {
-        let p1 = v1_parts.get(i).and_then(|s| s.parse::<u32>().ok()).unwrap_or(0);
-        let p2 = v2_parts.get(i).and_then(|s| s.parse::<u32>().ok()).unwrap_or(0);
+        let p1_str = v1_parts.get(i).unwrap_or(&"0");
+        let p2_str = v2_parts.get(i).unwrap_or(&"0");
         
-        if p1 > p2 {
-            return 1;
-        } else if p1 < p2 {
-            return -1;
+        match (p1_str.parse::<u32>(), p2_str.parse::<u32>()) {
+            (Ok(n1), Ok(n2)) => {
+                if n1 > n2 {
+                    return 1;
+                } else if n1 < n2 {
+                    return -1;
+                }
+            }
+            _ => {
+                match p1_str.cmp(p2_str) {
+                    std::cmp::Ordering::Greater => return 1,
+                    std::cmp::Ordering::Less => return -1,
+                    std::cmp::Ordering::Equal => {}
+                }
+            }
         }
     }
     
