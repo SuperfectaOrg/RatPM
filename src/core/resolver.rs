@@ -62,10 +62,10 @@ impl DependencyGraph {
         while let Some(idx) = queue.pop() {
             sorted.push(self.nodes[idx].package.clone());
             
-            for &dependent in &self.nodes[idx].dependents {
-                in_degree[dependent] -= 1;
-                if in_degree[dependent] == 0 {
-                    queue.push(dependent);
+            for &dep_idx in &self.nodes[idx].dependencies {
+                in_degree[dep_idx] -= 1;
+                if in_degree[dep_idx] == 0 {
+                    queue.push(dep_idx);
                 }
             }
         }
