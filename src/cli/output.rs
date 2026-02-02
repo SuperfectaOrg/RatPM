@@ -1,6 +1,6 @@
-use std::io::{self, Write};
+use crate::backend::fedora::types::{DiagnosticIssue, HistoryEntry, Package, PackageInfo};
 use crate::core::transaction::Transaction;
-use crate::backend::fedora::types::{Package, PackageInfo, DiagnosticIssue, HistoryEntry};
+use std::io::{self, Write};
 
 const COLOR_RESET: &str = "\x1b[0m";
 const COLOR_GREEN: &str = "\x1b[32m";
@@ -33,17 +33,19 @@ pub fn success(message: &str) {
     println!("{}", message);
 }
 
+#[allow(dead_code)]
 pub fn error(message: &str) {
     eprintln!("Error: {}", message);
 }
 
+#[allow(dead_code)]
 pub fn warning(message: &str) {
     eprintln!("Warning: {}", message);
 }
 
 pub fn print_transaction_summary(transaction: &Transaction, color: bool) {
     let mut stdout = io::stdout();
-    
+
     if !transaction.install.is_empty() {
         if color {
             write!(stdout, "{}{}", COLOR_BOLD, COLOR_GREEN).unwrap();
@@ -52,7 +54,7 @@ pub fn print_transaction_summary(transaction: &Transaction, color: bool) {
         if color {
             write!(stdout, "{}", COLOR_RESET).unwrap();
         }
-        
+
         for pkg in &transaction.install {
             writeln!(stdout, "  {}-{}.{}", pkg.name, pkg.version, pkg.arch).unwrap();
         }
@@ -67,7 +69,7 @@ pub fn print_transaction_summary(transaction: &Transaction, color: bool) {
         if color {
             write!(stdout, "{}", COLOR_RESET).unwrap();
         }
-        
+
         for pkg in &transaction.remove {
             writeln!(stdout, "  {}-{}.{}", pkg.name, pkg.version, pkg.arch).unwrap();
         }
@@ -82,13 +84,14 @@ pub fn print_transaction_summary(transaction: &Transaction, color: bool) {
         if color {
             write!(stdout, "{}", COLOR_RESET).unwrap();
         }
-        
+
         for (old, new) in &transaction.upgrade {
             writeln!(
                 stdout,
                 "  {}: {}.{} -> {}.{}",
                 old.name, old.version, old.arch, new.version, new.arch
-            ).unwrap();
+            )
+            .unwrap();
         }
         writeln!(stdout).unwrap();
     }
@@ -97,22 +100,37 @@ pub fn print_transaction_summary(transaction: &Transaction, color: bool) {
     writeln!(stdout, "  Install:  {} packages", transaction.install.len()).unwrap();
     writeln!(stdout, "  Remove:   {} packages", transaction.remove.len()).unwrap();
     writeln!(stdout, "  Upgrade:  {} packages", transaction.upgrade.len()).unwrap();
-    writeln!(stdout, "  Download: {}", format_size(transaction.download_size)).unwrap();
-    
+    writeln!(
+        stdout,
+        "  Download: {}",
+        format_size(transaction.download_size)
+    )
+    .unwrap();
+
     if transaction.install_size > 0 {
-        writeln!(stdout, "  Disk space required: {}", format_size(transaction.install_size as u64)).unwrap();
+        writeln!(
+            stdout,
+            "  Disk space required: {}",
+            format_size(transaction.install_size as u64)
+        )
+        .unwrap();
     } else if transaction.install_size < 0 {
-        writeln!(stdout, "  Disk space freed: {}", format_size(transaction.install_size.unsigned_abs())).unwrap();
+        writeln!(
+            stdout,
+            "  Disk space freed: {}",
+            format_size(transaction.install_size.unsigned_abs())
+        )
+        .unwrap();
     }
-    
+
     writeln!(stdout).unwrap();
-    
+
     stdout.flush().unwrap();
 }
 
 pub fn print_package_list(packages: &[Package], color: bool) {
     let mut stdout = io::stdout();
-    
+
     for pkg in packages {
         if color {
             write!(stdout, "{}", COLOR_BOLD).unwrap();
@@ -121,14 +139,14 @@ pub fn print_package_list(packages: &[Package], color: bool) {
         if color {
             write!(stdout, "{}", COLOR_RESET).unwrap();
         }
-        
+
         writeln!(stdout, "-{}.{}", pkg.version, pkg.arch).unwrap();
-        
+
         if !pkg.summary.is_empty() {
             writeln!(stdout, "  {}", pkg.summary).unwrap();
         }
     }
-    
+
     stdout.flush().unwrap();
 }
 
@@ -173,7 +191,7 @@ pub fn print_package_info(info: &PackageInfo, color: bool) {
 
 pub fn print_diagnostic_issues(issues: &[DiagnosticIssue], color: bool) {
     let mut stdout = io::stdout();
-    
+
     for issue in issues {
         if color {
             let color_code = match issue.severity.as_str() {
@@ -183,28 +201,28 @@ pub fn print_diagnostic_issues(issues: &[DiagnosticIssue], color: bool) {
             };
             write!(stdout, "{}{}", COLOR_BOLD, color_code).unwrap();
         }
-        
+
         write!(stdout, "[{}]", issue.severity.to_uppercase()).unwrap();
-        
+
         if color {
             write!(stdout, "{}", COLOR_RESET).unwrap();
         }
-        
+
         writeln!(stdout, " {}", issue.message).unwrap();
-        
+
         if !issue.suggestion.is_empty() {
             writeln!(stdout, "  Suggestion: {}", issue.suggestion).unwrap();
         }
-        
+
         writeln!(stdout).unwrap();
     }
-    
+
     stdout.flush().unwrap();
 }
 
 pub fn print_history(entries: &[HistoryEntry], color: bool) {
     let mut stdout = io::stdout();
-    
+
     for entry in entries {
         if color {
             write!(stdout, "{}", COLOR_BOLD).unwrap();
@@ -213,25 +231,25 @@ pub fn print_history(entries: &[HistoryEntry], color: bool) {
         if color {
             write!(stdout, "{}", COLOR_RESET).unwrap();
         }
-        
+
         writeln!(stdout, " | {} | {}", entry.timestamp, entry.command).unwrap();
-        
+
         for action in &entry.actions {
             writeln!(stdout, "  {}", action).unwrap();
         }
-        
+
         writeln!(stdout).unwrap();
     }
-    
+
     stdout.flush().unwrap();
 }
 
 pub fn prompt_confirmation(message: &str) -> io::Result<bool> {
     print!("{} [y/N] ", message);
     io::stdout().flush()?;
-    
+
     let mut response = String::new();
     io::stdin().read_line(&mut response)?;
-    
+
     Ok(response.trim().eq_ignore_ascii_case("y"))
 }

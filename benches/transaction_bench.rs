@@ -1,11 +1,9 @@
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
-use ratpm::core::transaction::Transaction;
 use ratpm::backend::fedora::types::PackageSpec;
+use ratpm::core::transaction::Transaction;
 
 fn bench_transaction_creation(c: &mut Criterion) {
-    c.bench_function("transaction_new", |b| {
-        b.iter(|| Transaction::new())
-    });
+    c.bench_function("transaction_new", |b| b.iter(Transaction::new));
 }
 
 fn bench_transaction_add_install(c: &mut Criterion) {
@@ -30,7 +28,7 @@ fn bench_transaction_operations(c: &mut Criterion) {
     c.bench_function("transaction_mixed_operations", |b| {
         b.iter(|| {
             let mut transaction = Transaction::new();
-            
+
             for i in 0..50 {
                 let spec = PackageSpec::new(
                     format!("install-{}", i),
@@ -40,7 +38,7 @@ fn bench_transaction_operations(c: &mut Criterion) {
                 );
                 transaction.add_install(spec, 1_000_000);
             }
-            
+
             for i in 0..30 {
                 let spec = PackageSpec::new(
                     format!("remove-{}", i),
@@ -50,7 +48,7 @@ fn bench_transaction_operations(c: &mut Criterion) {
                 );
                 transaction.add_remove(spec, 500_000);
             }
-            
+
             for i in 0..20 {
                 let old_spec = PackageSpec::new(
                     format!("upgrade-{}", i),
@@ -66,7 +64,7 @@ fn bench_transaction_operations(c: &mut Criterion) {
                 );
                 transaction.add_upgrade(old_spec, new_spec, 500_000, 600_000);
             }
-            
+
             black_box(transaction)
         })
     });

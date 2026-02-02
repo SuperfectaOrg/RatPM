@@ -36,7 +36,7 @@ impl PackageSpec {
             repo,
         }
     }
-    
+
     pub fn to_nevra(&self) -> String {
         format!("{}-{}.{}", self.name, self.version, self.arch)
     }
@@ -62,11 +62,14 @@ pub struct RepositoryMetadata {
     pub name: String,
     pub baseurl: String,
     pub enabled: bool,
+    #[allow(dead_code)]
     pub gpgcheck: bool,
+    #[allow(dead_code)]
     pub gpgkey: Vec<String>,
     pub last_refresh: Option<i64>,
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct PackageDownload {
     pub spec: PackageSpec,

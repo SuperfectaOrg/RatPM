@@ -1,12 +1,13 @@
-use anyhow::Result;
-use std::sync::Arc;
-use crate::config::Config;
-use crate::core::lock::{LockManager, LockGuard, FileLockManager};
-use crate::core::errors::RatpmError;
 use crate::backend::fedora::FedoraBackend;
 use crate::cli::output;
+use crate::config::Config;
+use crate::core::errors::RatpmError;
+use crate::core::lock::{FileLockManager, LockGuard, LockManager};
+use anyhow::Result;
+use std::sync::Arc;
 
 pub struct Context {
+    #[allow(dead_code)]
     config: Config,
     backend: FedoraBackend,
     lock_manager: Arc<FileLockManager>,
@@ -18,13 +19,11 @@ pub struct Context {
 impl Context {
     pub fn new(config: Config) -> Result<Self> {
         let is_root = nix::unistd::geteuid().is_root();
-        
-        let lock_manager = Arc::new(FileLockManager::new(
-            config.system.lock_file.clone()
-        ));
-        
+
+        let lock_manager = Arc::new(FileLockManager::new(config.system.lock_file.clone()));
+
         let backend = FedoraBackend::new(&config)?;
-        
+
         Ok(Self {
             assume_yes: config.system.assume_yes,
             color: config.system.color,
@@ -34,47 +33,48 @@ impl Context {
             is_root,
         })
     }
-    
+
     pub fn require_root(&self) -> Result<(), RatpmError> {
         if !self.is_root {
             return Err(RatpmError::PermissionDenied);
         }
         Ok(())
     }
-    
+
     pub fn acquire_lock(&self) -> Result<LockGuard> {
         self.lock_manager.acquire()
     }
-    
+
     pub fn backend(&self) -> &FedoraBackend {
         &self.backend
     }
-    
+
     pub fn backend_mut(&mut self) -> &mut FedoraBackend {
         &mut self.backend
     }
-    
+
+    #[allow(dead_code)]
     pub fn config(&self) -> &Config {
         &self.config
     }
-    
+
     pub fn set_assume_yes(&mut self, value: bool) {
         self.assume_yes = value;
     }
-    
+
     pub fn set_color(&mut self, value: bool) {
         self.color = value;
     }
-    
+
     pub fn color_enabled(&self) -> bool {
         self.color
     }
-    
+
     pub fn confirm_transaction(&self) -> Result<bool> {
         if self.assume_yes {
             return Ok(true);
         }
-        
+
         output::prompt_confirmation("Proceed with transaction?")
             .map_err(|e| anyhow::anyhow!("Failed to read user input: {}", e))
     }

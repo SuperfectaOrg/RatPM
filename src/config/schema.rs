@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 
+#[allow(dead_code)]
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct RepoDefinition {
     pub name: String,
@@ -12,6 +13,7 @@ pub struct RepoDefinition {
     pub priority: Option<u32>,
 }
 
+#[allow(dead_code)]
 impl RepoDefinition {
     pub fn validate(&self) -> Result<(), String> {
         if self.baseurl.is_none() && self.metalink.is_none() && self.mirrorlist.is_none() {
@@ -32,6 +34,7 @@ impl RepoDefinition {
     }
 }
 
+#[allow(dead_code)]
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct HistorySchema {
     pub id: i64,

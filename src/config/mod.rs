@@ -8,14 +8,14 @@ mod schema;
 const SYSTEM_CONFIG_PATH: &str = "/etc/ratpm/ratpm.toml";
 const USER_CONFIG_PATH: &str = ".config/ratpm/ratpm.toml";
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize, Default)]
 pub struct Config {
     #[serde(default)]
     pub system: SystemConfig,
-    
+
     #[serde(default)]
     pub repos: RepoConfig,
-    
+
     #[serde(default)]
     pub transaction: TransactionConfig,
 }
@@ -24,16 +24,16 @@ pub struct Config {
 pub struct SystemConfig {
     #[serde(default = "default_backend")]
     pub backend: String,
-    
+
     #[serde(default)]
     pub assume_yes: bool,
-    
+
     #[serde(default = "default_true")]
     pub color: bool,
-    
+
     #[serde(default = "default_cache_dir")]
     pub cache_dir: PathBuf,
-    
+
     #[serde(default = "default_lock_file")]
     pub lock_file: PathBuf,
 }
@@ -42,13 +42,13 @@ pub struct SystemConfig {
 pub struct RepoConfig {
     #[serde(default = "default_true")]
     pub auto_refresh: bool,
-    
+
     #[serde(default = "default_metadata_expire")]
     pub metadata_expire: u64,
-    
+
     #[serde(default = "default_repo_dir")]
     pub repo_dir: PathBuf,
-    
+
     #[serde(default = "default_true")]
     pub gpgcheck: bool,
 }
@@ -57,10 +57,10 @@ pub struct RepoConfig {
 pub struct TransactionConfig {
     #[serde(default = "default_true")]
     pub keep_cache: bool,
-    
+
     #[serde(default = "default_history_limit")]
     pub history_limit: usize,
-    
+
     #[serde(default = "default_true")]
     pub verify_signatures: bool,
 }
@@ -126,26 +126,15 @@ impl Default for TransactionConfig {
     }
 }
 
-impl Default for Config {
-    fn default() -> Self {
-        Self {
-            system: SystemConfig::default(),
-            repos: RepoConfig::default(),
-            transaction: TransactionConfig::default(),
-        }
-    }
-}
-
 pub fn load_config() -> Result<Config> {
     let system_config = load_config_file(Path::new(SYSTEM_CONFIG_PATH));
-    
-    let user_config_path = dirs::home_dir()
-        .map(|home| home.join(USER_CONFIG_PATH));
-    
+
+    let user_config_path = dirs::home_dir().map(|home| home.join(USER_CONFIG_PATH));
+
     let user_config = user_config_path
         .as_ref()
         .and_then(|path| load_config_file(path));
-    
+
     match (system_config, user_config) {
         (Some(mut sys), Some(user)) => {
             merge_configs(&mut sys, user);
@@ -178,47 +167,47 @@ fn merge_configs(base: &mut Config, overlay: Config) {
     if overlay.system.backend != default_backend() {
         base.system.backend = overlay.system.backend;
     }
-    
+
     if overlay.system.assume_yes {
         base.system.assume_yes = true;
     }
-    
+
     if !overlay.system.color {
         base.system.color = false;
     }
-    
+
     if overlay.system.cache_dir != default_cache_dir() {
         base.system.cache_dir = overlay.system.cache_dir;
     }
-    
+
     if overlay.system.lock_file != default_lock_file() {
         base.system.lock_file = overlay.system.lock_file;
     }
-    
+
     if !overlay.repos.auto_refresh {
         base.repos.auto_refresh = false;
     }
-    
+
     if overlay.repos.metadata_expire != default_metadata_expire() {
         base.repos.metadata_expire = overlay.repos.metadata_expire;
     }
-    
+
     if overlay.repos.repo_dir != default_repo_dir() {
         base.repos.repo_dir = overlay.repos.repo_dir;
     }
-    
+
     if !overlay.repos.gpgcheck {
         base.repos.gpgcheck = false;
     }
-    
+
     if !overlay.transaction.keep_cache {
         base.transaction.keep_cache = false;
     }
-    
+
     if overlay.transaction.history_limit != default_history_limit() {
         base.transaction.history_limit = overlay.transaction.history_limit;
     }
-    
+
     if !overlay.transaction.verify_signatures {
         base.transaction.verify_signatures = false;
     }
@@ -228,14 +217,14 @@ fn validate_config(config: &Config) -> Result<()> {
     if config.system.backend != "fedora" {
         anyhow::bail!("Unsupported backend: {}", config.system.backend);
     }
-    
+
     if config.repos.metadata_expire == 0 {
         anyhow::bail!("metadata_expire must be greater than 0");
     }
-    
+
     if config.transaction.history_limit == 0 {
         anyhow::bail!("history_limit must be greater than 0");
     }
-    
+
     Ok(())
 }
