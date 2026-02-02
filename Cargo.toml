@@ -9,7 +9,7 @@ description = "Primary package manager for RatOS"
 [dependencies]
 clap = { version = "4.4", features = ["derive"] }
 serde = { version = "1.0", features = ["derive"] }
-toml = "0.8"
+toml = "0.9"
 anyhow = "1.0"
 thiserror = "1.0"
 nix = { version = "0.27", features = ["fs", "user", "process", "signal"] }
