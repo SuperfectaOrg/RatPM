@@ -13,7 +13,7 @@ toml = "0.8"
 anyhow = "1.0"
 thiserror = "1.0"
 nix = { version = "0.27", features = ["fs", "user", "process", "signal"] }
-rpm = "0.13"
+rpm = "0.18"
 indicatif = "0.17"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
