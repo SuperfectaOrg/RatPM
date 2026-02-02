@@ -1,20 +1,23 @@
 pub mod install {
-    use anyhow::{Context as _, Result};
-    use crate::core::context::Context;
     use crate::cli::output;
+    use crate::core::context::Context;
+    use anyhow::{Context as _, Result};
 
     pub fn execute(context: &mut Context, packages: Vec<String>) -> Result<()> {
         if packages.is_empty() {
             anyhow::bail!("No packages specified");
         }
 
-        context.require_root()
+        context
+            .require_root()
             .context("Root privileges required for package installation")?;
 
-        let lock = context.acquire_lock()
+        let lock = context
+            .acquire_lock()
             .context("Failed to acquire package manager lock")?;
 
-        let transaction = context.backend_mut()
+        let transaction = context
+            .backend_mut()
             .resolve_install(&packages)
             .context("Failed to resolve dependencies")?;
 
@@ -30,7 +33,8 @@ pub mod install {
             return Ok(());
         }
 
-        context.backend_mut()
+        context
+            .backend_mut()
             .execute(transaction)
             .context("Transaction failed")?;
 
@@ -42,22 +46,25 @@ pub mod install {
 }
 
 pub mod remove {
-    use anyhow::{Context as _, Result};
-    use crate::core::context::Context;
     use crate::cli::output;
+    use crate::core::context::Context;
+    use anyhow::{Context as _, Result};
 
     pub fn execute(context: &mut Context, packages: Vec<String>) -> Result<()> {
         if packages.is_empty() {
             anyhow::bail!("No packages specified");
         }
 
-        context.require_root()
+        context
+            .require_root()
             .context("Root privileges required for package removal")?;
 
-        let lock = context.acquire_lock()
+        let lock = context
+            .acquire_lock()
             .context("Failed to acquire package manager lock")?;
 
-        let transaction = context.backend_mut()
+        let transaction = context
+            .backend_mut()
             .resolve_remove(&packages)
             .context("Failed to resolve removal")?;
 
@@ -73,7 +80,8 @@ pub mod remove {
             return Ok(());
         }
 
-        context.backend_mut()
+        context
+            .backend_mut()
             .execute(transaction)
             .context("Transaction failed")?;
 
@@ -85,20 +93,23 @@ pub mod remove {
 }
 
 pub mod update {
-    use anyhow::{Context as _, Result};
-    use crate::core::context::Context;
     use crate::cli::output;
+    use crate::core::context::Context;
+    use anyhow::{Context as _, Result};
 
     pub fn execute(context: &mut Context) -> Result<()> {
-        context.require_root()
+        context
+            .require_root()
             .context("Root privileges required for repository update")?;
 
-        let lock = context.acquire_lock()
+        let lock = context
+            .acquire_lock()
             .context("Failed to acquire package manager lock")?;
 
         output::info("Updating repository metadata...");
 
-        context.backend_mut()
+        context
+            .backend_mut()
             .refresh_repositories()
             .context("Failed to refresh repositories")?;
 
@@ -110,15 +121,17 @@ pub mod update {
 }
 
 pub mod upgrade {
-    use anyhow::{Context as _, Result};
-    use crate::core::context::Context;
     use crate::cli::output;
+    use crate::core::context::Context;
+    use anyhow::{Context as _, Result};
 
     pub fn execute(context: &mut Context, packages: Option<Vec<String>>) -> Result<()> {
-        context.require_root()
+        context
+            .require_root()
             .context("Root privileges required for system upgrade")?;
 
-        let lock = context.acquire_lock()
+        let lock = context
+            .acquire_lock()
             .context("Failed to acquire package manager lock")?;
 
         let transaction = match packages {
@@ -138,7 +151,8 @@ pub mod upgrade {
             return Ok(());
         }
 
-        context.backend_mut()
+        context
+            .backend_mut()
             .execute(transaction)
             .context("Transaction failed")?;
 
@@ -150,9 +164,9 @@ pub mod upgrade {
 }
 
 pub mod search {
-    use anyhow::Result;
-    use crate::core::context::Context;
     use crate::cli::output;
+    use crate::core::context::Context;
+    use anyhow::Result;
 
     pub fn execute(context: &mut Context, query: &str) -> Result<()> {
         let results = context.backend().search(query)?;
@@ -168,9 +182,9 @@ pub mod search {
 }
 
 pub mod info {
-    use anyhow::Result;
-    use crate::core::context::Context;
     use crate::cli::output;
+    use crate::core::context::Context;
+    use anyhow::Result;
 
     pub fn execute(context: &mut Context, package: &str) -> Result<()> {
         let pkg = context.backend().get_package_info(package)?;
@@ -180,9 +194,9 @@ pub mod info {
 }
 
 pub mod list {
-    use anyhow::Result;
-    use crate::core::context::Context;
     use crate::cli::output;
+    use crate::core::context::Context;
+    use anyhow::Result;
 
     pub fn execute(context: &mut Context, installed: bool, available: bool) -> Result<()> {
         let packages = if installed {
@@ -199,20 +213,23 @@ pub mod list {
 }
 
 pub mod sync {
-    use anyhow::{Context as _, Result};
-    use crate::core::context::Context;
     use crate::cli::output;
+    use crate::core::context::Context;
+    use anyhow::{Context as _, Result};
 
     pub fn execute(context: &mut Context) -> Result<()> {
-        context.require_root()
+        context
+            .require_root()
             .context("Root privileges required for sync operation")?;
 
-        let lock = context.acquire_lock()
+        let lock = context
+            .acquire_lock()
             .context("Failed to acquire package manager lock")?;
 
         output::info("Synchronizing package databases...");
 
-        context.backend_mut()
+        context
+            .backend_mut()
             .sync_databases()
             .context("Failed to synchronize databases")?;
 
@@ -224,9 +241,9 @@ pub mod sync {
 }
 
 pub mod doctor {
-    use anyhow::Result;
-    use crate::core::context::Context;
     use crate::cli::output;
+    use crate::core::context::Context;
+    use anyhow::Result;
 
     pub fn execute(context: &mut Context) -> Result<()> {
         output::info("Running system diagnostics...");
@@ -244,9 +261,9 @@ pub mod doctor {
 }
 
 pub mod history {
-    use anyhow::Result;
-    use crate::core::context::Context;
     use crate::cli::output;
+    use crate::core::context::Context;
+    use anyhow::Result;
 
     pub fn execute(context: &mut Context, limit: Option<usize>) -> Result<()> {
         let entries = context.backend().get_history(limit.unwrap_or(20))?;

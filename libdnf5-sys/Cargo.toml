@@ -7,6 +7,9 @@ license = "GPL-3.0-or-later"
 description = "FFI bindings to libdnf5"
 links = "dnf5"
 
+[features]
+use_system_libdnf5 = []
+
 [dependencies]
 libc = "0.2"
 

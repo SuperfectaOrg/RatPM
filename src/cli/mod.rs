@@ -106,36 +106,19 @@ impl Cli {
         }
 
         match &self.command {
-            Commands::Install { packages } => {
-                commands::install::execute(context, packages.clone())
-            }
-            Commands::Remove { packages } => {
-                commands::remove::execute(context, packages.clone())
-            }
-            Commands::Update => {
-                commands::update::execute(context)
-            }
-            Commands::Upgrade { packages } => {
-                commands::upgrade::execute(context, packages.clone())
-            }
-            Commands::Search { query } => {
-                commands::search::execute(context, query)
-            }
-            Commands::Info { package } => {
-                commands::info::execute(context, package)
-            }
-            Commands::List { installed, available } => {
-                commands::list::execute(context, *installed, *available)
-            }
-            Commands::Sync => {
-                commands::sync::execute(context)
-            }
-            Commands::Doctor => {
-                commands::doctor::execute(context)
-            }
-            Commands::History { limit } => {
-                commands::history::execute(context, *limit)
-            }
+            Commands::Install { packages } => commands::install::execute(context, packages.clone()),
+            Commands::Remove { packages } => commands::remove::execute(context, packages.clone()),
+            Commands::Update => commands::update::execute(context),
+            Commands::Upgrade { packages } => commands::upgrade::execute(context, packages.clone()),
+            Commands::Search { query } => commands::search::execute(context, query),
+            Commands::Info { package } => commands::info::execute(context, package),
+            Commands::List {
+                installed,
+                available,
+            } => commands::list::execute(context, *installed, *available),
+            Commands::Sync => commands::sync::execute(context),
+            Commands::Doctor => commands::doctor::execute(context),
+            Commands::History { limit } => commands::history::execute(context, *limit),
         }
     }
 }
