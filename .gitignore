@@ -9,3 +9,4 @@ Cargo.lock
 .vscode/
 .idea/
 *.log
+_codeql_detected_source_root
