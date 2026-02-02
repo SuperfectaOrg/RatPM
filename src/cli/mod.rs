@@ -1,83 +1,141 @@
-use std::sync::Arc;
-use std::thread;
-use std::time::Duration;
-use tempfile::NamedTempFile;
-use ratpm::core::lock::{FileLockManager, LockManager};
+use anyhow::Result;
+use clap::{Parser, Subcommand};
 
-#[test]
-fn test_lock_acquire_and_release() {
-    let temp_file = NamedTempFile::new().unwrap();
-    let lock_manager = FileLockManager::new(temp_file.path().to_path_buf());
-    
-    let guard = lock_manager.acquire();
-    assert!(guard.is_ok());
-    
-    drop(guard);
+pub mod commands;
+pub mod output;
+
+use crate::core::context::Context;
+
+#[derive(Parser)]
+#[command(name = "ratpm")]
+#[command(version)]
+#[command(about = "RatOS Package Manager", long_about = None)]
+pub struct Cli {
+    #[command(subcommand)]
+    pub command: Commands,
+
+    /// Assume yes to all prompts
+    #[arg(short = 'y', long, global = true)]
+    pub assume_yes: bool,
+
+    /// Disable colored output
+    #[arg(long, global = true)]
+    pub no_color: bool,
 }
 
-#[test]
-fn test_lock_prevents_concurrent_access() {
-    let temp_file = NamedTempFile::new().unwrap();
-    let lock_path = temp_file.path().to_path_buf();
-    let lock_manager = Arc::new(FileLockManager::new(lock_path.clone()));
-    
-    let _guard1 = lock_manager.acquire().unwrap();
-    
-    let lock_manager2 = Arc::clone(&lock_manager);
-    let handle = thread::spawn(move || {
-        lock_manager2.acquire()
-    });
-    
-    thread::sleep(Duration::from_millis(500));
-    
-    assert!(!handle.is_finished(), "Thread should still be waiting for lock");
+#[derive(Subcommand)]
+pub enum Commands {
+    /// Install packages
+    #[command(name = "install")]
+    Install {
+        /// Packages to install
+        #[arg(required = true)]
+        packages: Vec<String>,
+    },
+
+    /// Remove packages
+    #[command(name = "remove")]
+    Remove {
+        /// Packages to remove
+        #[arg(required = true)]
+        packages: Vec<String>,
+    },
+
+    /// Update repository metadata
+    #[command(name = "update")]
+    Update,
+
+    /// Upgrade installed packages
+    #[command(name = "upgrade")]
+    Upgrade {
+        /// Specific packages to upgrade (all if omitted)
+        packages: Option<Vec<String>>,
+    },
+
+    /// Search for packages
+    #[command(name = "search")]
+    Search {
+        /// Search query
+        query: String,
+    },
+
+    /// Show package information
+    #[command(name = "info")]
+    Info {
+        /// Package name
+        package: String,
+    },
+
+    /// List packages
+    #[command(name = "list")]
+    List {
+        /// List only installed packages
+        #[arg(long)]
+        installed: bool,
+
+        /// List only available packages
+        #[arg(long)]
+        available: bool,
+    },
+
+    /// Synchronize package databases
+    #[command(name = "sync")]
+    Sync,
+
+    /// Run system diagnostics
+    #[command(name = "doctor")]
+    Doctor,
+
+    /// Show transaction history
+    #[command(name = "history")]
+    History {
+        /// Number of entries to show
+        #[arg(short = 'n', long)]
+        limit: Option<usize>,
+    },
 }
 
-#[test]
-fn test_lock_released_on_drop() {
-    let temp_file = NamedTempFile::new().unwrap();
-    let lock_path = temp_file.path().to_path_buf();
-    let lock_manager = FileLockManager::new(lock_path);
-    
-    {
-        let _guard = lock_manager.acquire().unwrap();
-    }
-    
-    let guard2 = lock_manager.acquire();
-    assert!(guard2.is_ok());
-}
+impl Cli {
+    pub fn execute(&self, context: &mut Context) -> Result<()> {
+        if self.assume_yes {
+            context.set_assume_yes(true);
+        }
 
-#[test]
-fn test_multiple_sequential_locks() {
-    let temp_file = NamedTempFile::new().unwrap();
-    let lock_manager = FileLockManager::new(temp_file.path().to_path_buf());
-    
-    for _ in 0..5 {
-        let guard = lock_manager.acquire();
-        assert!(guard.is_ok());
-        drop(guard);
-    }
-}
+        if self.no_color {
+            context.set_color(false);
+        }
 
-#[test]
-fn test_lock_across_threads() {
-    let temp_file = NamedTempFile::new().unwrap();
-    let lock_path = temp_file.path().to_path_buf();
-    let lock_manager = Arc::new(FileLockManager::new(lock_path));
-    
-    let mut handles = vec![];
-    
-    for i in 0..3 {
-        let lm = Arc::clone(&lock_manager);
-        let handle = thread::spawn(move || {
-            thread::sleep(Duration::from_millis(i * 50));
-            let _guard = lm.acquire().unwrap();
-            thread::sleep(Duration::from_millis(10));
-        });
-        handles.push(handle);
-    }
-    
-    for handle in handles {
-        handle.join().unwrap();
+        match &self.command {
+            Commands::Install { packages } => {
+                commands::install::execute(context, packages.clone())
+            }
+            Commands::Remove { packages } => {
+                commands::remove::execute(context, packages.clone())
+            }
+            Commands::Update => {
+                commands::update::execute(context)
+            }
+            Commands::Upgrade { packages } => {
+                commands::upgrade::execute(context, packages.clone())
+            }
+            Commands::Search { query } => {
+                commands::search::execute(context, query)
+            }
+            Commands::Info { package } => {
+                commands::info::execute(context, package)
+            }
+            Commands::List { installed, available } => {
+                commands::list::execute(context, *installed, *available)
+            }
+            Commands::Sync => {
+                commands::sync::execute(context)
+            }
+            Commands::Doctor => {
+                commands::doctor::execute(context)
+            }
+            Commands::History { limit } => {
+                commands::history::execute(context, *limit)
+            }
+        }
     }
 }
