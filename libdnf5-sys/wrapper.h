@@ -1,6 +1,8 @@
 #ifndef LIBDNF5_WRAPPER_H
 #define LIBDNF5_WRAPPER_H
 
+#include <stddef.h>
+
 #ifdef HAVE_LIBDNF5
 #include <libdnf5/base/base.hpp>
 #include <libdnf5/repo/repo.hpp>

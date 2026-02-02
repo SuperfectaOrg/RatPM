@@ -134,8 +134,8 @@ pub fn print_package_list(packages: &[Package], color: bool) {
 
 pub fn print_package_info(info: &PackageInfo, color: bool) {
     let mut stdout = io::stdout();
-    
-    let print_field = |label: &str, value: &str| {
+
+    fn print_field(stdout: &mut io::Stdout, color: bool, label: &str, value: &str) {
         if color {
             write!(stdout, "{}", COLOR_BOLD).unwrap();
         }
@@ -144,30 +144,30 @@ pub fn print_package_info(info: &PackageInfo, color: bool) {
             write!(stdout, "{}", COLOR_RESET).unwrap();
         }
         writeln!(stdout, "{}", value).unwrap();
-    };
+    }
 
-    print_field("Name", &info.name);
-    print_field("Version", &info.version);
-    print_field("Arch", &info.arch);
-    print_field("Repository", &info.repo);
-    print_field("Size", &format_size(info.size));
-    print_field("Summary", &info.summary);
-    
+    print_field(&mut stdout, color, "Name", &info.name);
+    print_field(&mut stdout, color, "Version", &info.version);
+    print_field(&mut stdout, color, "Arch", &info.arch);
+    print_field(&mut stdout, color, "Repository", &info.repo);
+    print_field(&mut stdout, color, "Size", &format_size(info.size));
+    print_field(&mut stdout, color, "Summary", &info.summary);
+
     if !info.description.is_empty() {
         writeln!(stdout).unwrap();
         writeln!(stdout, "Description:").unwrap();
         writeln!(stdout, "{}", info.description).unwrap();
     }
-    
+
     if !info.url.is_empty() {
         writeln!(stdout).unwrap();
-        print_field("URL", &info.url);
+        print_field(&mut stdout, color, "URL", &info.url);
     }
-    
+
     if !info.license.is_empty() {
-        print_field("License", &info.license);
+        print_field(&mut stdout, color, "License", &info.license);
     }
-    
+
     stdout.flush().unwrap();
 }
 

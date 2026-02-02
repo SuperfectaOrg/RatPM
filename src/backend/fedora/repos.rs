@@ -128,7 +128,7 @@ impl RepositoryManager {
             .and_then(|v| v.parse::<i32>().ok())
             .unwrap_or(if self.gpgcheck { 1 } else { 0 }) == 1;
         
-        let gpgkey = data.get("gpgkey")
+        let gpgkey: Vec<String> = data.get("gpgkey")
             .map(|s| s.split_whitespace().map(String::from).collect())
             .unwrap_or_default();
         

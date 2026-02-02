@@ -1,6 +1,5 @@
 use anyhow::{Context, Result};
 use nix::fcntl::{flock, FlockArg};
-use nix::sys::stat::Mode;
 use nix::unistd::Pid;
 use std::fs::{File, OpenOptions};
 use std::io::{Read, Write};
